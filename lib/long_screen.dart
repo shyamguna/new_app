@@ -509,6 +509,14 @@ class _LongScreenState extends State<LongScreen> {
                             borderRadius: BorderRadius.circular(15),
                           ),
                         ),
+                        Container(
+                          height: 133,
+                          width: 142,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFEFEFF2),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: const [
