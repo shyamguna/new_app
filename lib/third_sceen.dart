@@ -352,7 +352,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
                   borderRadius: BorderRadius.all(
                     Radius.circular(10),
                   ),
-                  color: Colors.yellow,
+                  color: Colors.white,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(10),
@@ -499,6 +499,45 @@ class _ThirdScreenState extends State<ThirdScreen> {
               ),
             ),
           ],
+        ),
+      ),
+      bottomSheet: Padding(
+        padding: const EdgeInsets.only(bottom: 15),
+        child: Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                  blurRadius: 5,
+                  spreadRadius: 0,
+                  color: Colors.transparent,
+                  offset: Offset(0, 10))
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Image.asset(
+                "assets/images/ghome.png",
+                height: 40,
+                width: 25,
+              ),
+              Image.asset(
+                "assets/images/gbuy.png",
+                height: 40,
+                width: 25,
+              ),
+              Image.asset(
+                "assets/images/gheart.png",
+                height: 40,
+                width: 25,
+              ),
+              Image.asset(
+                "assets/images/glist.png",
+                height: 40,
+                width: 25,
+              ),
+            ],
+          ),
         ),
       ),
     );

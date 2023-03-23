@@ -1,10 +1,6 @@
 /// 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
-
-
-
-
 import 'package:flutter/material.dart';
-import 'package:new_app/long_screen.dart';
+import 'package:new_app/plugin_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,10 +15,10 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        // primarySwatch: Colors.blue,
         fontFamily: "Merriweather",
       ),
-      home: const LongScreen(title: AutofillHints.jobTitle),
+      home: const PluginScreen(),
     );
   }
 }
