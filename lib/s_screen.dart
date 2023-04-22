@@ -1,84 +1,23 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:new_app/signup_screen.dart';
 import 'package:new_app/text_field_common/text_field_screen.dart';
-import 'package:new_app/video_player.dart';
 
-class LogInPage extends StatefulWidget {
+import 'login_screen.dart';
+
+class SScreen extends StatefulWidget {
   static final RegExp nameRegExp = RegExp('[a-zA-Z]');
   static final RegExp numberRegExp = RegExp(r'\d');
-  const LogInPage({Key? key}) : super(key: key);
+  const SScreen({Key? key}) : super(key: key);
 
   @override
-  State<LogInPage> createState() => _LogInPageState();
+  State<SScreen> createState() => _SScreenState();
 }
 
-class _LogInPageState extends State<LogInPage> {
+class _SScreenState extends State<SScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool checkBoxData = true;
   TextEditingController emailController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-
-  User? userCradential;
-
-  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-
-  UserLogin() async {
-    try {
-      await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-              email: emailController.text, password: passwordController.text)
-          .then((value) {
-        userCradential = value.user;
-        debugPrint('user Data -----> ${value.user}');
-        userCradential = value.user;
-
-        if (value.user!.emailVerified) {
-          userCradential = value.user;
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text(' User has been Login')));
-          return false;
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('please verify your email.')));
-          value.user!.sendEmailVerification();
-          return false;
-        }
-      });
-    } on FirebaseAuthException catch (error) {
-      debugPrint('code ---> ${error.code}');
-      if (error.code == 'email-already-in-use') {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('Login ok')));
-        Navigator.push(
-            context,
-            CupertinoPageRoute(
-              builder: (context) => const VideoApp(),
-            ));
-        return false;
-      } else if (error.code == 'invalid-email') {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('invalid email')));
-        return false;
-      } else if (error.code == 'weak-password') {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Password should be at least 6 characters')));
-        return false;
-      } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(error!.code)));
-        debugPrint('message ---> ${error.message}');
-      }
-    }
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    userCradential = FirebaseAuth.instance.currentUser;
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,9 +26,8 @@ class _LogInPageState extends State<LogInPage> {
       body: SafeArea(
         child: Column(
           children: [
-            const SizedBox(height: 23),
             const Text(
-              "Log in",
+              "Create an account",
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 16,
@@ -97,7 +35,7 @@ class _LogInPageState extends State<LogInPage> {
                 fontFamily: "Lato",
               ),
             ),
-            const SizedBox(height: 17),
+            const SizedBox(height: 10),
             const Divider(thickness: 2),
             Form(
               key: formKey,
@@ -106,12 +44,12 @@ class _LogInPageState extends State<LogInPage> {
                   physics: const AlwaysScrollableScrollPhysics(),
                   keyboardDismissBehavior:
                       ScrollViewKeyboardDismissBehavior.onDrag,
-                  padding: const EdgeInsets.all(30),
+                  padding: const EdgeInsets.only(top: 30, right: 30, left: 30),
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 80),
                         Image.asset(
                           "assets/images/shopping.png",
                           height: 35,
@@ -129,7 +67,30 @@ class _LogInPageState extends State<LogInPage> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 25),
+                    const SizedBox(height: 20),
+                    const Text(
+                      "Full Name",
+                      style: TextStyle(
+                        color: Color(0xFF36322A),
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: "Lato",
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextFieldScreen(
+                      controller: nameController,
+                      textInputAction: TextInputAction.next,
+                      validator: (value) {
+                        if (RegExp(r'[!@#<>?":_`~;[\]\\|=+)(*&^%\s-]')
+                            .hasMatch(value!)) {
+                          return "";
+                        } else {
+                          return "Please enter your Name";
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 20),
                     const Text(
                       "Email",
                       style: TextStyle(
@@ -178,7 +139,6 @@ class _LogInPageState extends State<LogInPage> {
                     GestureDetector(
                       onTap: () {
                         formKey.currentState!.validate();
-                        UserLogin();
                       },
                       child: Container(
                         height: 48,
@@ -189,7 +149,7 @@ class _LogInPageState extends State<LogInPage> {
                         child: const Align(
                           alignment: Alignment.center,
                           child: Text(
-                            "Log In",
+                            "Create an account",
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 16,
@@ -278,7 +238,7 @@ class _LogInPageState extends State<LogInPage> {
                                     AssetImage("assets/images/Sfacebook.png")),
                             SizedBox(width: 40),
                             Text(
-                              "Continue with Facebook",
+                              "Create an account with Facebook",
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Color(0XFF36322A),
@@ -305,9 +265,9 @@ class _LogInPageState extends State<LogInPage> {
                           children: const [
                             Image(
                                 image: AssetImage("assets/images/Sgoogle.png")),
-                            SizedBox(width: 55),
+                            SizedBox(width: 40),
                             Text(
-                              "Continue with Google",
+                              "Create an account with Google",
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Color(0XFF36322A),
@@ -334,9 +294,9 @@ class _LogInPageState extends State<LogInPage> {
                           children: const [
                             Image(
                                 image: AssetImage("assets/images/Sapple.png")),
-                            SizedBox(width: 60),
+                            SizedBox(width: 40),
                             Text(
-                              "Continue with Apple",
+                              "Create an account with Apple",
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Color(0XFF36322A),
@@ -350,9 +310,10 @@ class _LogInPageState extends State<LogInPage> {
                     ),
                     const SizedBox(height: 20),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const Text(
-                          "New to Shopex?",
+                          "Already a Shopex member? ",
                           style: TextStyle(
                             fontSize: 16,
                             color: Color(0XFF36322A),
@@ -366,12 +327,12 @@ class _LogInPageState extends State<LogInPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const SignUpPage(),
+                                builder: (context) => const LogInPage(),
                               ),
                             );
                           },
                           child: const Text(
-                            "Create an account",
+                            "Log in",
                             style: TextStyle(
                               height: 1.5,
                               shadows: [
@@ -384,9 +345,10 @@ class _LogInPageState extends State<LogInPage> {
                               decorationStyle: TextDecorationStyle.solid,
                             ),
                           ),
-                        ),
+                        )
                       ],
                     ),
+                    const SizedBox(height: 30),
                   ],
                 ),
               ),

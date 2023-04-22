@@ -24,6 +24,14 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+
+	<key>NSPhotoLibraryUsageDescription </key>
+    <string>screen app need this permission for get programing to set image.</string>
+    <key>NSCameraUsageDescription </key>
+    <string>screen app need this permission for click programing to set image.</string>
+    <key>NSAppTransportSecurity  </key>
+    <string>screen app need this permission for get programing to play video.</string>
+
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

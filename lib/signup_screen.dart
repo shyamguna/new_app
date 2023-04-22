@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:new_app/text_field_common/text_field_screen.dart';
 
@@ -19,6 +20,26 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
+  User? userCradential;
+
+  UserSignUp() async {
+    try {
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: emailController.text, password: passwordController.text)
+          .then((value) {
+        userCradential = value.user;
+        debugPrint('user Data-> ${value.user}');
+        value.user!.sendEmailVerification();
+        setState(() {});
+      });
+    } on FirebaseAuthException catch (error) {
+      debugPrint('code-> ${error.code}');
+      debugPrint('code-> ${error.code}');
+      debugPrint('message-> ${error.message}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +47,7 @@ class _SignUpPageState extends State<SignUpPage> {
       body: SafeArea(
         child: Column(
           children: [
-            Text(
+            const Text(
               "Create an account",
               style: TextStyle(
                 color: Colors.black,
@@ -67,7 +88,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     const Text(
                       "Full Name",
                       style: TextStyle(
@@ -139,13 +160,14 @@ class _SignUpPageState extends State<SignUpPage> {
                     GestureDetector(
                       onTap: () {
                         formKey.currentState!.validate();
+                        UserSignUp();
                       },
                       child: Container(
                         height: 48,
                         width: double.infinity,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(100),
-                            color: Color(0xFFFAB131)),
+                            color: const Color(0xFFFAB131)),
                         child: const Align(
                           alignment: Alignment.center,
                           child: Text(
@@ -160,7 +182,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                     Row(
                       // mainAxisAlignment: MainAxisAlignment.start,
                       // crossAxisAlignment: CrossAxisAlignment.center,
@@ -190,7 +212,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                     Row(
                       children: const [
                         Expanded(
@@ -220,7 +242,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Container(
                       height: 40,
                       width: double.infinity,
@@ -250,7 +272,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Container(
                       height: 40,
                       width: double.infinity,
@@ -279,7 +301,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Container(
                       height: 40,
                       width: double.infinity,
@@ -308,7 +330,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -348,7 +370,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         )
                       ],
                     ),
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
                   ],
                 ),
               ),

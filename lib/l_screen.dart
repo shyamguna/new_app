@@ -1,84 +1,22 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:new_app/signup_screen.dart';
 import 'package:new_app/text_field_common/text_field_screen.dart';
-import 'package:new_app/video_player.dart';
 
-class LogInPage extends StatefulWidget {
+class LScreen extends StatefulWidget {
   static final RegExp nameRegExp = RegExp('[a-zA-Z]');
   static final RegExp numberRegExp = RegExp(r'\d');
-  const LogInPage({Key? key}) : super(key: key);
+  const LScreen({Key? key}) : super(key: key);
 
   @override
-  State<LogInPage> createState() => _LogInPageState();
+  State<LScreen> createState() => _LScreenState();
 }
 
-class _LogInPageState extends State<LogInPage> {
+class _LScreenState extends State<LScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool checkBoxData = true;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-
-  User? userCradential;
-
-  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-
-  UserLogin() async {
-    try {
-      await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-              email: emailController.text, password: passwordController.text)
-          .then((value) {
-        userCradential = value.user;
-        debugPrint('user Data -----> ${value.user}');
-        userCradential = value.user;
-
-        if (value.user!.emailVerified) {
-          userCradential = value.user;
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text(' User has been Login')));
-          return false;
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('please verify your email.')));
-          value.user!.sendEmailVerification();
-          return false;
-        }
-      });
-    } on FirebaseAuthException catch (error) {
-      debugPrint('code ---> ${error.code}');
-      if (error.code == 'email-already-in-use') {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('Login ok')));
-        Navigator.push(
-            context,
-            CupertinoPageRoute(
-              builder: (context) => const VideoApp(),
-            ));
-        return false;
-      } else if (error.code == 'invalid-email') {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('invalid email')));
-        return false;
-      } else if (error.code == 'weak-password') {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Password should be at least 6 characters')));
-        return false;
-      } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(error!.code)));
-        debugPrint('message ---> ${error.message}');
-      }
-    }
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    userCradential = FirebaseAuth.instance.currentUser;
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,15 +81,15 @@ class _LogInPageState extends State<LogInPage> {
                     TextFieldScreen(
                       controller: emailController,
                       textInputAction: TextInputAction.next,
-                      validator: (value) {
-                        if (RegExp(
-                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                            .hasMatch(value!)) {
-                          return "";
-                        } else {
-                          return "Please enter valid email";
-                        }
-                      },
+                      // validator: (value) {
+                      //   if (RegExp(
+                      //           r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                      //       .hasMatch(value!)) {
+                      //     return "";
+                      //   } else {
+                      //     return "Please enter valid email";
+                      //   }
+                      // },
                     ),
                     const SizedBox(height: 20),
                     const Text(
@@ -167,18 +105,20 @@ class _LogInPageState extends State<LogInPage> {
                     TextFieldScreen(
                       controller: passwordController,
                       textInputAction: TextInputAction.done,
-                      validator: (value) {
-                        if (value!.trim().isEmpty) {
-                          return 'Password is required';
-                        }
-                        return "";
-                      },
+                      // validator: (value) {
+                      //   if (value!.trim().isEmpty) {
+                      //     return 'Password is required';
+                      //   }
+                      //   return "";
+                      // },
                     ),
                     const SizedBox(height: 30),
                     GestureDetector(
                       onTap: () {
-                        formKey.currentState!.validate();
-                        UserLogin();
+                        if (validator()) {
+                          debugPrint("Every thing is Good!");
+                        }
+                        // formKey.currentState!.validate();
                       },
                       child: Container(
                         height: 48,
@@ -395,5 +335,58 @@ class _LogInPageState extends State<LogInPage> {
         ),
       ),
     );
+  }
+
+  showToastMessage(String message) {
+    return Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.black45,
+      textColor: Colors.black26,
+      fontSize: 16.0,
+    );
+
+    // return ScaffoldMessenger.of(context).showSnackBar(
+    //   SnackBar(
+    //     content: Text(message),
+    //     backgroundColor: (Colors.black54),
+    //     elevation: 0,
+    //     margin: const EdgeInsets.all(12),
+    //     behavior: SnackBarBehavior.floating,
+    //     duration: const Duration(seconds: 2),
+    //     onVisible: () {
+    //       debugPrint("onVisible ----->>> ");
+    //     },
+    //     // showCloseIcon: true,
+    //     dismissDirection: DismissDirection.horizontal,
+    //     action: SnackBarAction(
+    //       label: 'dismiss',
+    //       onPressed: () {},
+    //     ),
+    //   ),
+    // );
+  }
+
+  bool validator() {
+    if (emailController.text.isEmpty) {
+      showToastMessage("Please enter email");
+      return false;
+    } else if (!RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(emailController.text)) {
+      showToastMessage("Please enter valid email");
+      return false;
+    } else if (passwordController.text.isEmpty) {
+      showToastMessage("Please enter password");
+      return false;
+    } else if (!RegExp(
+            "^(?=.*[A-Z].*[A-Z])(?=.*[!@#\$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8}")
+        .hasMatch(passwordController.text)) {
+      showToastMessage("Please enter valid password");
+      return false;
+    } else {
+      return true;
+    }
   }
 }

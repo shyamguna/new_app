@@ -1,9 +1,15 @@
 /// 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
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:new_app/plugin_screen.dart';
+import 'package:new_app/signup_screen.dart';
 
-void main() {
-  runApp(const MyApp());
+// import 'firebase_options.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -18,7 +24,7 @@ class MyApp extends StatelessWidget {
         // primarySwatch: Colors.blue,
         fontFamily: "Merriweather",
       ),
-      home: const PluginScreen(),
+      home: const SignUpPage(),
     );
   }
 }
