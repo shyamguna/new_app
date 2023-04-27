@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:github_sign_in/github_sign_in.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:new_app/text_field_common/text_field_screen.dart';
 
 import 'login_screen.dart';
@@ -38,6 +40,41 @@ class _SignUpPageState extends State<SignUpPage> {
       debugPrint('code-> ${error.code}');
       debugPrint('message-> ${error.message}');
     }
+  }
+
+  signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
+  signInWithGitHub() async {
+    // Create a GitHubSignIn instance
+    final GitHubSignIn gitHubSignIn = GitHubSignIn(
+        clientId: "397c53c367540f5412b8",
+        clientSecret: "21480bb49f5424271f200079793baf87232430d0",
+        redirectUrl: 'https://new-app-3c810.firebaseapp.com/__/auth/handler');
+
+    // Trigger the sign-in flow
+    final result = await gitHubSignIn.signIn(context);
+
+    // Create a credential from the access token
+    final githubAuthCredential = GithubAuthProvider.credential(result.token!);
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance
+        .signInWithCredential(githubAuthCredential);
   }
 
   @override
@@ -273,60 +310,72 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Container(
-                      height: 40,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color: Colors.transparent,
-                          border: Border.all(color: Colors.black)),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 30, vertical: 8),
-                        child: Row(
-                          children: const [
-                            Image(
-                                image: AssetImage("assets/images/Sgoogle.png")),
-                            SizedBox(width: 40),
-                            Text(
-                              "Create an account with Google",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Color(0XFF36322A),
-                                fontFamily: "Lato",
-                                fontWeight: FontWeight.w500,
+                    GestureDetector(
+                      onTap: () {
+                        signInWithGoogle();
+                      },
+                      child: Container(
+                        height: 40,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: Colors.transparent,
+                            border: Border.all(color: Colors.black)),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 8),
+                          child: Row(
+                            children: const [
+                              Image(
+                                  image:
+                                      AssetImage("assets/images/Sgoogle.png")),
+                              SizedBox(width: 40),
+                              Text(
+                                "Create an account with Google",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Color(0XFF36322A),
+                                  fontFamily: "Lato",
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Container(
-                      height: 40,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color: Colors.transparent,
-                          border: Border.all(color: Colors.black)),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 30, vertical: 8),
-                        child: Row(
-                          children: const [
-                            Image(
-                                image: AssetImage("assets/images/Sapple.png")),
-                            SizedBox(width: 40),
-                            Text(
-                              "Create an account with Apple",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Color(0XFF36322A),
-                                fontFamily: "Lato",
-                                fontWeight: FontWeight.w500,
+                    GestureDetector(
+                      onTap: () {
+                        signInWithGitHub();
+                      },
+                      child: Container(
+                        height: 40,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: Colors.transparent,
+                            border: Border.all(color: Colors.black)),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 8),
+                          child: Row(
+                            children: const [
+                              Image(
+                                  image:
+                                      AssetImage("assets/images/Sapple.png")),
+                              SizedBox(width: 40),
+                              Text(
+                                "Create an account with Apple",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Color(0XFF36322A),
+                                  fontFamily: "Lato",
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
