@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:new_app/ecommerce_screen.dart';
 import 'package:new_app/signup_screen.dart';
 import 'package:new_app/text_field_common/text_field_screen.dart';
-import 'package:new_app/video_player.dart';
 
 class LogInPage extends StatefulWidget {
   static final RegExp nameRegExp = RegExp('[a-zA-Z]');
@@ -54,7 +54,7 @@ class _LogInPageState extends State<LogInPage> {
         Navigator.push(
             context,
             CupertinoPageRoute(
-              builder: (context) => const VideoApp(),
+              builder: (context) => const EcommerceScreen(),
             ));
         return false;
       } else if (error.code == 'invalid-email') {
